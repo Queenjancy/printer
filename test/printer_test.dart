@@ -16,6 +16,6 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    expect(await Printer.platformVersion, '42');
+    expect(await Printer.printTicket, '42');
   });
 }
