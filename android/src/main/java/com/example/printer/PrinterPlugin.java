@@ -1,5 +1,6 @@
 package com.example.printer;
 
+import android.os.Bundle;
 import android.os.RemoteException;
 
 import com.sunmi.peripheral.printer.InnerPrinterCallback;
@@ -8,15 +9,36 @@ import com.sunmi.peripheral.printer.InnerPrinterManager;
 import com.sunmi.peripheral.printer.InnerResultCallbcak;
 import com.sunmi.peripheral.printer.SunmiPrinterService;
 
+import io.flutter.app.FlutterActivity;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
-/** PrinterPlugin */
+public class PrinterPlugin extends FlutterActivity {
+  private static final String CHANNL = "printer";
+
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    new MethodChannel(getFlutterView(), CHANNL).setMethodCallHandler(
+            new MethodCallHandler() {
+              @Override
+              public void onMethodCall(MethodCall methodCall, Result result) {
+                if(methodCall.method.equals("printTicket")) {
+                  result.success("success");
+                }else {
+                  result.notImplemented();
+                }
+              }
+            }
+    );
+  }
+}
+
+/*
 public class PrinterPlugin implements MethodCallHandler {
-  /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel = new MethodChannel(registrar.messenger(), "snowofcat.printer");
     channel.setMethodCallHandler(new PrinterPlugin());
@@ -25,7 +47,7 @@ public class PrinterPlugin implements MethodCallHandler {
   @Override
   public void onMethodCall(MethodCall call, Result result) {
     if (call.method.equals("printTicket")) {
-      /*
+
       try {
         InnerPrinterCallback innerPrinterCallback = new InnerPrinterCallback() {
           @Override
@@ -66,10 +88,11 @@ public class PrinterPlugin implements MethodCallHandler {
       } catch (InnerPrinterException e) {
         e.printStackTrace();
       }
-      */
+
       result.success("success");
     } else {
       result.notImplemented();
     }
   }
 }
+*/

@@ -15,7 +15,7 @@ void main() {
     channel.setMockMethodCallHandler(null);
   });
 
-  test('getPlatformVersion', () async {
+  test('printTicket', () async {
     expect(await Printer.printTicket, '42');
   });
 }
