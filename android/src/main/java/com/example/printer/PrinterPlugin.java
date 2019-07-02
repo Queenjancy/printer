@@ -32,7 +32,7 @@ public class PrinterPlugin extends FlutterActivity {
                       @Override
                       protected void onConnected(SunmiPrinterService service) {
                         try {
-                          service.printText("打印小票\n打印小票\n打印小票\n打印小票", new InnerResultCallbcak() {
+                          service.printText("打印小票\n打印小票\n打印小票\n打印小票\n\n\n\n", new InnerResultCallbcak() {
                             @Override
                             public void onRunResult(boolean isSuccess) throws RemoteException {
                               System.out.println("success");
