@@ -27,6 +27,46 @@ public class PrinterPlugin extends FlutterActivity {
               @Override
               public void onMethodCall(MethodCall methodCall, Result result) {
                 if(methodCall.method.equals("printTicket")) {
+                  try {
+                    InnerPrinterCallback innerPrinterCallback = new InnerPrinterCallback() {
+                      @Override
+                      protected void onConnected(SunmiPrinterService service) {
+                        try {
+                          service.printText("打印小票\n打印小票\n打印小票\n打印小票", new InnerResultCallbcak() {
+                            @Override
+                            public void onRunResult(boolean isSuccess) throws RemoteException {
+                              System.out.println("success");
+                            }
+
+                            @Override
+                            public void onReturnString(String result) throws RemoteException {
+                              System.out.println("result");
+                            }
+
+                            @Override
+                            public void onRaiseException(int code, String msg) throws RemoteException {
+                              System.out.println("raise");
+                            }
+
+                            @Override
+                            public void onPrintResult(int code, String msg) throws RemoteException {
+                              System.out.println("print result");
+                            }
+                          });
+                        } catch (RemoteException e) {
+                          e.printStackTrace();
+                        }
+                      }
+
+                      @Override
+                      protected void onDisconnected() {
+                        System.out.println("断开了");
+                      }
+                    };
+                    InnerPrinterManager.getInstance().bindService(getApplicationContext(), innerPrinterCallback);
+                  } catch (InnerPrinterException e) {
+                    e.printStackTrace();
+                  }
                   result.success("success");
                 }else {
                   result.notImplemented();
@@ -36,63 +76,3 @@ public class PrinterPlugin extends FlutterActivity {
     );
   }
 }
-
-/*
-public class PrinterPlugin implements MethodCallHandler {
-  public static void registerWith(Registrar registrar) {
-    final MethodChannel channel = new MethodChannel(registrar.messenger(), "snowofcat.printer");
-    channel.setMethodCallHandler(new PrinterPlugin());
-  }
-
-  @Override
-  public void onMethodCall(MethodCall call, Result result) {
-    if (call.method.equals("printTicket")) {
-
-      try {
-        InnerPrinterCallback innerPrinterCallback = new InnerPrinterCallback() {
-          @Override
-          protected void onConnected(SunmiPrinterService service) {
-            try {
-              service.printText("打印小票\n打印小票\n打印小票\n打印小票", new InnerResultCallbcak() {
-                @Override
-                public void onRunResult(boolean isSuccess) throws RemoteException {
-                  System.out.println("success");
-                }
-
-                @Override
-                public void onReturnString(String result) throws RemoteException {
-                  System.out.println("result");
-                }
-
-                @Override
-                public void onRaiseException(int code, String msg) throws RemoteException {
-                  System.out.println("raise");
-                }
-
-                @Override
-                public void onPrintResult(int code, String msg) throws RemoteException {
-                  System.out.println("print result");
-                }
-              });
-            } catch (RemoteException e) {
-              e.printStackTrace();
-            }
-          }
-
-          @Override
-          protected void onDisconnected() {
-            System.out.println("断开了");
-          }
-        };
-        InnerPrinterManager.getInstance().bindService(getApplicationContext(), innerPrinterCallback);
-      } catch (InnerPrinterException e) {
-        e.printStackTrace();
-      }
-
-      result.success("success");
-    } else {
-      result.notImplemented();
-    }
-  }
-}
-*/

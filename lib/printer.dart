@@ -6,7 +6,6 @@ class Printer {
   static const MethodChannel _channel = const MethodChannel('printer');
 
   static Future<String> get printTicket async {
-    final String version = await _channel.invokeMethod('printTicket');
-    return version;
+    return await _channel.invokeMethod('printTicket');
   }
 }
